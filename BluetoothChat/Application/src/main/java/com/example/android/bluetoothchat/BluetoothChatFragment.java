@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -100,6 +101,7 @@ public class BluetoothChatFragment extends Fragment {
      */
     private BluetoothChatService mChatService = null;
 
+    private Handler mMainHandler;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +119,8 @@ public class BluetoothChatFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission();
         }
+
+        mMainHandler = new Handler(Looper.getMainLooper());
     }
 
     private boolean requestPermission() {
@@ -368,18 +372,29 @@ public class BluetoothChatFragment extends Fragment {
                             startActivity(launchIntent);//null pointer check in case package name was not found
                         }
                     }
-                    if (readMessage.equals("movie2")) {
-                        Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.samsung.android.app.vr.gallery");
-                        if (launchIntent != null) {
-                            launchIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(launchIntent);//null pointer check in case package name was not found
-                        }
-                    }
-                    if (readMessage.equals("movie")) {
+                    if (readMessage.equals("image")) {
                         startVrGallery2(getActivity(), 0, "/storage/emulated/0/DCIM/Gear 360/SAM_100_0016.jpg", 0);
                     }
+                    if (readMessage.equals("movie")) {
+//                        startVrGallery2(getActivity(), 0, "/storage/emulated/0/DCIM/Gear 360/SAM_100_0016.jpg", 0);
+//                        startVrGallery2(getActivity(), 0, "/storage/emulated/0/DCIM/Gear 360/SAM_100_0019.mp4", 1);
+
+                        Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.samsung.vrvideo");
+                        if (launchIntent != null) {
+                            launchIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            Uri uri = Uri.parse("samsungvr://sideload/?url=file:///storage/emulated/0/DCIM/Gear 360/SAM_100_0025.mp4&audio_type=other&video_type=_v360&title=Video Title");
+                            Uri uri = Uri.parse("samsungvr://sideload/?url=file:///storage/emulated/0/DCIM/Gear 360/SAM_100_0026.mp4");
+                            launchIntent.setData(uri);
+                            startActivity(launchIntent);//null pointer check in case package name was not found
+                        }
+
+                    }
                     if (readMessage.equals("toast")) {
-                        Toast.makeText(getActivity(), "This is a text", Toast.LENGTH_LONG).show();
+                        //Not work
+//                        Toast.makeText(getActivity(), "This is a text", Toast.LENGTH_LONG).show();
+
+                        //Not work
+//                        showToast(getActivity(), "Toast Message", Toast.LENGTH_LONG);
                     }
                     if (readMessage.equals("jurassic")) {
                         Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.felixandpaul.jurassicworld.apatosaurus");
@@ -474,6 +489,8 @@ public class BluetoothChatFragment extends Fragment {
     }
 
     public static final int VR_VIEWTYPE_ALBUM = 0;
+    public static final int VR_VIEWTYPE_DETAIL = 2;
+    public static final int VR_VIEWTYPE_LIST = 1;
 
     private static final String VR_GALLERY2_ACTIVITY_NAME = "com.samsung.android.app.vr.gallery2.MainActivity";
     private static final String VR_GALLERY2_PKG_NAME = "com.samsung.android.app.vr.gallery2";
@@ -506,6 +523,67 @@ public class BluetoothChatFragment extends Fragment {
         }
     }
 
+    private static final String VR_VIDEO_ACTIVITY_NAME = "com.samsung.android.app.vr.video.MainActivity";
+    private static final String VR_VIDEO_PKG_NAME = "com.samsung.android.app.vr.video";
+//    private static final String VR_VIDEO_PKG_NAME = "com.samsung.vrvideo";
+
+    private static void gearVRforVideofunctionality(Context context, String mVRfilePath) {
+        PackageInfo svrInstalled;
+        String SVR_PACKAGE_NAME_LOCAL = VR_VIDEO_PKG_NAME;
+        String SVR_ACTIVITY_NAME = VR_VIDEO_ACTIVITY_NAME;
+        try {
+            svrInstalled = context.getPackageManager().getPackageInfo(SVR_PACKAGE_NAME_LOCAL, VR_VIEWTYPE_ALBUM);
+        } catch (PackageManager.NameNotFoundException e) {
+            svrInstalled = null;
+        }
+        if (svrInstalled != null) {
+            Uri uri = Uri.parse("file://" + mVRfilePath);
+            Intent intent = new Intent();
+            intent.setClassName(SVR_PACKAGE_NAME_LOCAL, SVR_ACTIVITY_NAME);
+            intent.setData(uri);
+//            intent.putExtra("wait_title", context.getString(C0804R.string.SS_INSERT_DEVICE_INTO_GEAR_VR_HEADER_ABB));
+//            intent.putExtra("wait_message", context.getString(C0804R.string.f148xfc67daff));
+//            intent.setFlags(268500992);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            ((Activity) context).overridePendingTransition(VR_VIEWTYPE_ALBUM, VR_VIEWTYPE_ALBUM);
+            return;
+        }
+    }
+
+    Toast mToast;
+
+    //For Toast
+    private class ToastRunable implements Runnable {
+        final /* synthetic */ Context val$context;
+        final /* synthetic */ int val$duration;
+        final /* synthetic */ String val$str;
+
+        ToastRunable(Context context, String str, int i) {
+            this.val$context = context;
+            this.val$str = str;
+            this.val$duration = i;
+        }
+
+        public void run() {
+            if (mToast != null) {
+                mToast.cancel();
+            }
+            mToast = Toast.makeText(this.val$context, this.val$str, this.val$duration);
+            mToast.show();
+        }
+    }
+
+    private void showToast(Context context, String str, int duration) {
+        Runnable action = new ToastRunable(context, str, duration);
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action.run();
+        } else {
+            mMainHandler.post(action);
+        }
+    }
+
+    //
 
     private Boolean connect(BluetoothDevice bdDevice) {
         Boolean bool = false;

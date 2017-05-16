@@ -30,6 +30,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
@@ -53,6 +54,8 @@ public class MainActivity extends SampleActivityBase {
 
     public static final String TAG = "MainActivity";
 
+    boolean isMasterApp = true;
+
     // Whether the Log Fragment is currently shown
     private boolean mLogShown;
 
@@ -74,42 +77,16 @@ public class MainActivity extends SampleActivityBase {
         }
 
         if (savedInstanceState == null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                isMasterApp = bundle.getBoolean("isMasterApp", true);
+            }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            BluetoothChatFragment2 fragment = new BluetoothChatFragment2();
+            Fragment fragment = isMasterApp ? new BluetoothChatFragment() : new BluetoothChatFragment2();
             transaction.replace(R.id.sample_content_fragment, fragment);
             transaction.commit();
         }
 
-    }
-
-    private boolean requestPermission() {
-        String[] permissions = { Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.BLUETOOTH_PRIVILEGED};
-        boolean isGrantedBluetooth = isGrantedPermission(this, permissions);
-
-        if (!isGrantedBluetooth) {
-            requestPermission(this, permissions, 111);
-            return false;
-        }
-
-        return true;
-    }
-
-    boolean isGrantedPermission (Activity activity, String... permissions) {
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(activity,
-                    permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    void requestPermission(Activity activity, String[] permissions, int requestCode) {
-        ActivityCompat.requestPermissions(activity,
-                permissions,
-                requestCode);
     }
 
     @Override
@@ -164,14 +141,4 @@ public class MainActivity extends SampleActivityBase {
         Log.i(TAG, "Ready");
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("2359", "Request Permission");
-        } else {
-
-        }
-    }
 }

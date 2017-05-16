@@ -66,6 +66,14 @@ public class MusicActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+    }
+
     private boolean requestPermission() {
         String[] permissions = { Manifest.permission.READ_EXTERNAL_STORAGE};
         boolean isGrantedBluetooth = isGrantedPermission(this, permissions);

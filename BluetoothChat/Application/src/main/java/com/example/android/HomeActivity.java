@@ -2,8 +2,6 @@ package com.example.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +18,7 @@ public class HomeActivity extends Activity {
     @Bind(R.id.bt_master) Button btMaster;
     @Bind(R.id.bt_music) Button btMusic;
     @Bind(R.id.bt_package) Button btPackage;
+    @Bind(R.id.bt_notification) Button btNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +52,14 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, PackageNameActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, NotificationActivity.class);
                 startActivity(intent);
             }
         });

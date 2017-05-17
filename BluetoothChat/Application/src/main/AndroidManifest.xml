@@ -52,7 +52,10 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.android.MusicActivity" />
-        <activity android:name="com.example.android.PackageNameActivity"></activity>
+        <activity android:name="com.example.android.PackageNameActivity" />
+        <activity android:name="com.example.android.NotificationActivity"/>
+
+        <receiver android:name="com.example.android.bluetoothchat.MyNotificationPublisher"/>
     </application>
 
 </manifest>

@@ -35,7 +35,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden"></activity>
+            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name=".DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -51,7 +51,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android.MusicActivity"></activity>
+        <activity android:name="com.example.android.MusicActivity" />
+        <activity android:name="com.example.android.PackageNameActivity"></activity>
     </application>
 
 </manifest>

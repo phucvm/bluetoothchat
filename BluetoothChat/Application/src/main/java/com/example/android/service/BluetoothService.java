@@ -40,15 +40,13 @@ public class BluetoothService extends Service{
     private String mConnectedDeviceName = null;
 
     private String address;
-    private String action;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             address = intent.getStringExtra("ADDRESS");
-            action = intent.getStringExtra("ACTION");
         }
-        Log.d("2359", "Start Command "+address + "///" + action);
+        Log.d("2359", "Start Command "+address);
         if (address != null  && address.length() > 0) {
             connectDevice(address, true);
         }
@@ -59,7 +57,7 @@ public class BluetoothService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("2359", "Service Start "+address + "///" + action);
+        Log.d("2359", "Service Start "+address);
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             mMainHandler = new Handler(Looper.getMainLooper());
             if (!mBluetoothAdapter.isEnabled()) {
@@ -113,6 +111,14 @@ public class BluetoothService extends Service{
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
+
+        if (mChatService != null) {
+            // Only if the state is STATE_NONE, do we know that we haven't started already
+            if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
+                // Start the Bluetooth chat services
+                mChatService.start();
+            }
+        }
 
 //        // Initialize the buffer for outgoing messages
 //        mOutStringBuffer = new StringBuffer("");

@@ -184,6 +184,9 @@ public class BluetoothChatFragment2 extends Fragment {
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+
+        Intent intent = new Intent(getActivity(), BluetoothService.class);
+        getActivity().startService(intent);
     }
 
     @Override
@@ -198,9 +201,6 @@ public class BluetoothChatFragment2 extends Fragment {
         mOutEditText = (EditText) view.findViewById(R.id.edit_text_out);
         mSendButton = (Button) view.findViewById(R.id.button_send);
 
-//        Intent intent = new Intent(getActivity(), BluetoothService.class);
-//        intent.putExtra("ACTION", "INIT");
-//        getActivity().startService(intent);
     }
 
     /**

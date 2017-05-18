@@ -20,6 +20,7 @@
 
     <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -52,7 +53,8 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.android.MusicActivity" />
-        <activity android:name="com.example.android.PackageNameActivity"></activity>
+        <activity android:name="com.example.android.PackageNameActivity" />
+        <activity android:name="com.example.android.DownloadActivity"></activity>
     </application>
 
 </manifest>

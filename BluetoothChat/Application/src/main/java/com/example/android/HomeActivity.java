@@ -13,13 +13,9 @@ import com.example.android.bluetoothchat.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class HomeActivity extends Activity {
-
-    @Bind(R.id.bt_vr) Button btVR;
-    @Bind(R.id.bt_master) Button btMaster;
-    @Bind(R.id.bt_music) Button btMusic;
-    @Bind(R.id.bt_package) Button btPackage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,35 +23,34 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        btVR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startApp(false);
-            }
-        });
+    }
 
-        btMaster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startApp(true);
-            }
-        });
+    @OnClick(R.id.bt_vr)
+    void onVRClick() {
+        startApp(false);
+    }
 
-        btMusic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, MusicActivity.class);
-                startActivity(intent);
-            }
-        });
+    @OnClick(R.id.bt_master)
+    void onMasterClick() {
+        startApp(true);
+    }
 
-        btPackage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, PackageNameActivity.class);
-                startActivity(intent);
-            }
-        });
+    @OnClick(R.id.bt_music)
+    void onMusicClick() {
+        Intent intent = new Intent(HomeActivity.this, MusicActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.bt_package)
+    void onPackageClick() {
+        Intent intent = new Intent(HomeActivity.this, PackageNameActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.bt_download)
+    void onDownloadClick() {
+        Intent intent = new Intent(HomeActivity.this, DownloadActivity.class);
+        startActivity(intent);
     }
 
     private void startApp(boolean isMasterApp) {

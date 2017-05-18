@@ -1,33 +1,23 @@
 package com.example.android.service;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.NotificationActivity;
 import com.example.android.bluetoothchat.BluetoothChatService;
 import com.example.android.bluetoothchat.Constants;
-import com.example.android.bluetoothchat.DeviceListActivity;
-import com.example.android.bluetoothchat.R;
 
 /**
  * Created by phucvm on 5/2/17.
@@ -245,6 +235,10 @@ public class BluetoothService extends Service{
                         }
                     }
 
+                    if (readMessage.equals("notify")) {
+                        Log.d("debug","notify done");
+                        NotificationActivity.scheduleNotification(getApplicationContext(),10,0);
+                    }
 
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:

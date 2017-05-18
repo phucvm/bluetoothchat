@@ -58,6 +58,7 @@ public class MusicActivity extends Activity {
             File path = android.os.Environment.getExternalStorageDirectory();
             try {
                 mediaPlayer.setDataSource(path + "/Download/Ed Sheeran - Shape of You.mp3");
+//                mediaPlayer.setDataSource(path + "/Samsung/Music/Over_the_Horizon.mp3");
                 mediaPlayer.prepare();
                 mediaPlayer.start();
             } catch (IOException e) {

@@ -53,6 +53,14 @@
             android:padding="10dp"
             android:text="Download"/>
 
+        <Button
+            android:id="@+id/bt_notification"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:text="Notification"/>
+
     </LinearLayout>
 
 

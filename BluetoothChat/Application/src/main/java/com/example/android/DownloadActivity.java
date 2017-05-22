@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.example.android.bluetoothchat.R;
 
 import java.io.File;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -31,7 +33,11 @@ public class DownloadActivity extends Activity {
 
     private DownloadManager downloadManager;
 
-    private long imageDownloadID, musicDownloadID;
+    private long imageDownloadID, videoDownloadID;
+
+    @Bind(R.id.bt_play) Button btPlay;
+
+    private File videoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +51,26 @@ public class DownloadActivity extends Activity {
 
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         registerReceiver(downloadReceiver, filter);
+
+        videoFile = new File(android.os.Environment.getExternalStorageDirectory() +"/Download/Content/Video.mp4");
+
+        btPlay.setVisibility(videoFile.exists() ? View.VISIBLE : View.GONE);
     }
 
     @OnClick(R.id.bt_start_download)
     void onStartDownloadClick() {
-        Uri music_uri = Uri.parse("http://www.androidtutorialpoint.com/wp-content/uploads/2016/09/AndroidDownloadManager.mp3");
-        musicDownloadID = download(music_uri);
+        Uri videoUri = Uri.parse("http://s3-ap-southeast-1.amazonaws.com/samsung-marvel-stg/assets/contents/000/000/002/original/mov_bbb.mp4?1495096460");
+        videoDownloadID = download(videoUri);
+    }
+
+    @OnClick(R.id.bt_play)
+    void onPlayVideoClick() {
+        if (videoFile != null && videoFile.exists()) {
+            Uri videoUri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+ "/Download/Content/Video.mp4");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(videoUri, "video/*");
+            startActivity(intent);
+        }
     }
 
     private long download(Uri uri) {
@@ -67,10 +87,8 @@ public class DownloadActivity extends Activity {
 //        request.setDescription("Android Data download using DownloadManager.");
 
 
-
-        File path = new File(android.os.Environment.getExternalStorageDirectory() +"/Download/Content/AndroidDownloadManager.mp3");
-        if (path.exists()) path.delete();
-        request.setDestinationUri(Uri.fromFile(path));
+        if (videoFile.exists()) videoFile.delete();
+        request.setDestinationUri(Uri.fromFile(videoFile));
 
 
 
@@ -133,15 +151,10 @@ public class DownloadActivity extends Activity {
 
             if(referenceId == imageDownloadID) {
                 Toast.makeText(DownloadActivity.this, "Image Download Complete", Toast.LENGTH_LONG).show();
-//                Toast toast = Toast.makeText(DownloadActivity.this, "Image Download Complete", Toast.LENGTH_LONG);
-//                toast.setGravity(Gravity.TOP, 25, 400);
-//                toast.show();
             }
-            else if(referenceId == musicDownloadID) {
-                Toast.makeText(DownloadActivity.this, "Music Download Complete", Toast.LENGTH_LONG).show();
-//                Toast toast = Toast.makeText(DownloadActivity.this, "Music Download Complete", Toast.LENGTH_LONG);
-//                toast.setGravity(Gravity.TOP, 25, 400);
-//                toast.show();
+            else if(referenceId == videoDownloadID) {
+                Toast.makeText(DownloadActivity.this, "Video Download Complete", Toast.LENGTH_LONG).show();
+                btPlay.setVisibility(View.VISIBLE);
             }
         }
     };

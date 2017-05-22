@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.example.android.bluetoothchat.MainActivity;
 import com.example.android.bluetoothchat.R;
 import com.example.android.common.logger.Log;
+import com.example.android.service.BluetoothService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -82,7 +83,7 @@ public class HomeActivity extends Activity {
 
     private void startApp(boolean isMasterApp) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("isMasterApp", isMasterApp);
+        intent.putExtra("isMasterApp", false);
         startActivity(intent);
     }
 }

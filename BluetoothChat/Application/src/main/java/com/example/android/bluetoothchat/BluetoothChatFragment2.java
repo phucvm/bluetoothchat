@@ -170,6 +170,8 @@ public class BluetoothChatFragment2 extends Fragment {
     public void onStart() {
         super.onStart();
             setupChat();
+        Intent intent = new Intent(getActivity(), BluetoothService.class);
+        getActivity().startService(intent);
     }
 
     @Override
@@ -185,8 +187,6 @@ public class BluetoothChatFragment2 extends Fragment {
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
 
-        Intent intent = new Intent(getActivity(), BluetoothService.class);
-        getActivity().startService(intent);
     }
 
     @Override
@@ -253,6 +253,13 @@ public class BluetoothChatFragment2 extends Fragment {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
+        if (message != null && message.length() > 0) {
+            Intent intent = new Intent(getActivity(), BluetoothService.class);
+            intent.putExtra("ACTION", "SEND");
+            intent.putExtra("CONTENT", message);
+            getActivity().startService(intent);
+            mOutEditText.setText("");
+        }
     }
 
     /**

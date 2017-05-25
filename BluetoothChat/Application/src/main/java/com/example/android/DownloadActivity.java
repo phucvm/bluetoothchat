@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -59,18 +60,27 @@ public class DownloadActivity extends Activity {
 
     @OnClick(R.id.bt_start_download)
     void onStartDownloadClick() {
-        Uri videoUri = Uri.parse("http://s3-ap-southeast-1.amazonaws.com/samsung-marvel-stg/assets/contents/000/000/002/original/mov_bbb.mp4?1495096460");
+        Uri videoUri = Uri.parse("https://s3-ap-southeast-1.amazonaws.com/samsung-marvel-stg/assets%2F4-40w1p2ncz6v%2F%5BSamsung%5D+360+video+demo.mp4");
         videoDownloadID = download(videoUri);
     }
 
     @OnClick(R.id.bt_play)
     void onPlayVideoClick() {
         if (videoFile != null && videoFile.exists()) {
-            Uri videoUri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+ "/Download/Content/Video.mp4");
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(videoUri, "video/*");
+
+            Uri uri = Uri.parse("file://" + videoFile.getPath());
+            Intent intent = new Intent();
+            intent.setClassName("com.samsung.android.gear360viewer", "com.samsung.android.gear360viewer.videoplayer360.VideoPlayer360Activity");
+            intent.setData(uri);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(downloadReceiver);
     }
 
     private long download(Uri uri) {

@@ -21,12 +21,6 @@ import butterknife.OnClick;
 
 public class HomeActivity extends Activity {
 
-    @Bind(R.id.bt_vr) Button btVR;
-    @Bind(R.id.bt_master) Button btMaster;
-    @Bind(R.id.bt_music) Button btMusic;
-    @Bind(R.id.bt_package) Button btPackage;
-    @Bind(R.id.bt_notification) Button btNotification;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +72,12 @@ public class HomeActivity extends Activity {
     @OnClick(R.id.bt_notification)
     void onNotificationClick() {
         Intent intent = new Intent(HomeActivity.this, NotificationActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.bt_timer)
+    void onTimerClick() {
+        Intent intent = new Intent(HomeActivity.this, TimerActivity.class);
         startActivity(intent);
     }
 
